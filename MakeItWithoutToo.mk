@@ -72,7 +72,10 @@
 #               deploy: (...)
 #               (it is up to you)
 #               ...
-
+#
+#               You can override the test running command by setting TESTRUNCMD as follows:
+#               TESTRUNCMD=`echo data | test-binary`
+#
 AR = ar
 NATIVE_SRC = $(shell uname -s | tr '[:upper:]' '[:lower:]' | sed 's/^mingw.*/windows/g')
 
@@ -100,6 +103,8 @@ SOURCES := $(wildcard *$(PICKED_CCEXT))
 SOURCES += $(wildcard $(NATIVE_SRC)/*$(PICKED_CCEXT))
 OBJECTS := $(patsubst %$(PICKED_CCEXT), $(OBJDIR)/%.o,$(SOURCES))
 
+TESTRUNCMD ?= `find . -executable -type f`
+
 all: $(CUSTOM_RULES_PROLOGUE) setup $(BINARY) $(CUSTOM_RULES_EPILOGUE) test
 
 setup:
@@ -109,7 +114,7 @@ setup:
 test:
 ifndef skip-tests
 	@if [ -d "test" ]; then \
-	    cd test && make && cd bin && $$(find . -executable -type f) ;\
+	    cd test && make && cd bin && $(TESTRUNCMD) ;\
 	fi
 endif
 
