@@ -114,7 +114,7 @@ setup:
 test:
 ifndef skip-tests
 	@if [ -d "test" ]; then \
-	    cd test && make && cd bin && `$(TESTRUNCMD)` ;\
+	    cd test && gmake && cd bin && `$(TESTRUNCMD)` ;\
 	fi
 endif
 
